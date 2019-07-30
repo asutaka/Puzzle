@@ -16,6 +16,18 @@ public class MainController : MonoBehaviour
     /// </summary>
     public RawImage imgMain;
     /// <summary>
+    /// Đối tượng hiển thị stt của ảnh
+    /// </summary>
+    public Text txtCount;
+    /// <summary>
+    /// Đối tượng hiển thị thời gian thực hiện màn chơi
+    /// </summary>
+    public Text txtTime;
+    /// <summary>
+    /// Đối tượng thông báo trạng thái đã hoàn thành game
+    /// </summary>
+    public Text txtComplete;
+    /// <summary>
     /// Button
     /// </summary>
     public Button btnPlay;
@@ -38,6 +50,7 @@ public class MainController : MonoBehaviour
     private int ROW = -1, COL = -1;
     //
     private int[,] arrMatrix;
+    private int[,] arrMatrix_Origin;
     //
     private float stepW = 0, stepH = 0;
     //
@@ -59,7 +72,15 @@ public class MainController : MonoBehaviour
     //Hằng số giá trị số lần đảo ảnh
     private const int MAX_SWAP = 4;
     //Biến lưu index của lần swap 
-    private int curSwap = 0;
+    private int curSwap = MAX_SWAP;
+    //Biến check trạng thái đang chơi hay ở màn hình chờ
+    private bool isView = true;
+    //Biến kiểm tra game đã được hoàn thành hay chưa
+    private bool hasComplete = false;
+    /// <summary>
+    /// Thời điểm ban đầu
+    /// </summary>
+    private float timeStart = 0;
     #endregion
     #region enum
     private enum Type : int
@@ -88,18 +109,31 @@ public class MainController : MonoBehaviour
                 break;
         }
         arrMatrix = new int[ROW, COL];
+        arrMatrix_Origin = new int[ROW, COL];
         //////////////////////////////////////////
         ThietLapThongSo();
         generateArray();
         generatePiece_BackGround();
         generatePiece();
         LoadDefaultImage();
+
+        txtCount.text = curImage.ToString();
     }
     // Update is called once per frame
     void Update()
     {
+        if (isView)
+            return;
         getInput();
         handle();
+        if (checkComplete())
+        {
+            txtComplete.gameObject.SetActive(true);
+        }
+        else
+        {
+            ThoiGian();
+        }
     }
     #endregion
     #region Public function
@@ -128,8 +162,9 @@ public class MainController : MonoBehaviour
             btnNext.gameObject.SetActive(false);
         }
         btnBack.gameObject.SetActive(true);
+        txtCount.text = curImage.ToString();
 
-        curSwap = 0;
+        curSwap = MAX_SWAP;
         Swap_Normal();
         reArrange();
     }
@@ -144,8 +179,9 @@ public class MainController : MonoBehaviour
             btnBack.gameObject.SetActive(false);
         }
         btnNext.gameObject.SetActive(true);
+        txtCount.text = curImage.ToString();
 
-        curSwap = 0;
+        curSwap = MAX_SWAP;
         Swap_Normal();
         reArrange();
     }
@@ -154,6 +190,13 @@ public class MainController : MonoBehaviour
     /// </summary>
     public void ButtonPlay()
     {
+        isView = false;
+
+        if (curSwap == MAX_SWAP)
+        {
+            ButtonSwap();
+        }
+
         btnPlay.gameObject.SetActive(false);
         btnBack.gameObject.SetActive(false);
         btnNext.gameObject.SetActive(false);
@@ -221,51 +264,51 @@ public class MainController : MonoBehaviour
         int indexSwap = 0 + index;
         switch (indexSwap)
         {
-            case 0: Swap_Normal();break;
-            case 1: Swap_UpDownA();break;
-            case 2: Swap_UpDownA_L();break;
-            case 3: Swap_UpDownA_R();break;
-            case 4: Swap_UpDownA_U();break;
-            case 5: Swap_UpDownA_D();break;
-            case 6: Swap_UpDownA_LR();break;
-            case 7: Swap_UpDownA_RL();break;
-            case 8: Swap_UpDownB();break;
-            case 9: Swap_UpDownB_L();break;
-            case 10: Swap_UpDownB_R();break;
-            case 11: Swap_UpDownB_U();break;
-            case 12: Swap_UpDownB_D();break;
-            case 13: Swap_Sole();break;
-            case 14: Swap_Block3A();break;
-            case 15: Swap_Sole_Left();break;
-            case 16: Swap_Block3B();break;
-            case 17: Swap_Sole_Right();break;
-            case 18: Swap_Block3C();break;
-            case 19: Swap_Sole_Up();break;
-            case 20: Swap_Block3D();break;
-            case 21: Swap_Sole_Down();break;
-            case 22: Swap_Block3E();break;
-            case 23: Swap_Sole_LR();break;
-            case 24: Swap_Block3F();break;
-            case 25: Swap_Sole_RL();break;
-            case 26: Swap_Block3G();break;
-            case 27: Swap_Block3H();break;
+            case 0: Swap_Normal(); break;
+            case 1: Swap_UpDownA(); break;
+            case 2: Swap_UpDownA_L(); break;
+            case 3: Swap_UpDownA_R(); break;
+            case 4: Swap_UpDownA_U(); break;
+            case 5: Swap_UpDownA_D(); break;
+            case 6: Swap_UpDownA_LR(); break;
+            case 7: Swap_UpDownA_RL(); break;
+            case 8: Swap_UpDownB(); break;
+            case 9: Swap_UpDownB_L(); break;
+            case 10: Swap_UpDownB_R(); break;
+            case 11: Swap_UpDownB_U(); break;
+            case 12: Swap_UpDownB_D(); break;
+            case 13: Swap_Sole(); break;
+            case 14: Swap_Block3A(); break;
+            case 15: Swap_Sole_Left(); break;
+            case 16: Swap_Block3B(); break;
+            case 17: Swap_Sole_Right(); break;
+            case 18: Swap_Block3C(); break;
+            case 19: Swap_Sole_Up(); break;
+            case 20: Swap_Block3D(); break;
+            case 21: Swap_Sole_Down(); break;
+            case 22: Swap_Block3E(); break;
+            case 23: Swap_Sole_LR(); break;
+            case 24: Swap_Block3F(); break;
+            case 25: Swap_Sole_RL(); break;
+            case 26: Swap_Block3G(); break;
+            case 27: Swap_Block3H(); break;
             case 28: Swap_UpDownB_LR(); break;
             case 29: Swap_UpDownB_RL(); break;
-            case 30: Swap_Sin();break;
-            case 31: SwapHoanVi();break;
-            case 32: Swap_Sin_L();break;
-            case 33: SwapHoanVi_L();break;
-            case 34: Swap_Sin_R();break;
-            case 35: SwapHoanVi_R();break;
-            case 36: Swap_Sin_U();break;
-            case 37: SwapHoanVi_U();break;
-            case 38: Swap_Sin_D();break;
-            case 39: SwapHoanVi_D();break;
-            case 40: Swap_Sin_LR();break;
-            case 41: SwapHoanVi_LR();break;
-            case 42: Swap_Sin_RL();break;
-            case 43: SwapHoanVi_RL();break;
-            default:Swap_Normal();break;
+            case 30: Swap_Sin(); break;
+            case 31: SwapHoanVi(); break;
+            case 32: Swap_Sin_L(); break;
+            case 33: SwapHoanVi_L(); break;
+            case 34: Swap_Sin_R(); break;
+            case 35: SwapHoanVi_R(); break;
+            case 36: Swap_Sin_U(); break;
+            case 37: SwapHoanVi_U(); break;
+            case 38: Swap_Sin_D(); break;
+            case 39: SwapHoanVi_D(); break;
+            case 40: Swap_Sin_LR(); break;
+            case 41: SwapHoanVi_LR(); break;
+            case 42: Swap_Sin_RL(); break;
+            case 43: SwapHoanVi_RL(); break;
+            default: Swap_Normal(); break;
         }
         reArrange();
         //showArray();
@@ -306,11 +349,25 @@ public class MainController : MonoBehaviour
         btnReLoad.gameObject.SetActive(true);
 
         btnCompass.gameObject.SetActive(false);
+        txtComplete.gameObject.SetActive(false);
 
         #region Tạm thời ẩn nút này đi
         btnLoadImage.gameObject.SetActive(false);
         chkMode.gameObject.SetActive(false);
         #endregion
+    }
+    private void ThoiGian()
+    {
+        if (isView || hasComplete)
+            return;
+        timeStart += Time.deltaTime;
+        TimeSpan t = TimeSpan.FromSeconds(timeStart);
+
+        string strTime = string.Format("{0:D2}:{1:D2}:{2:D3}",
+                        t.Minutes,
+                        t.Seconds,
+                        t.Milliseconds);
+        txtTime.text = strTime;
     }
     /// <summary>
     /// check Loại độ khó được chọn,set dữ liệu vào biến _type
@@ -354,6 +411,13 @@ public class MainController : MonoBehaviour
                     continue;
                 }
                 arrMatrix[i, j] = count++;
+            }
+        }
+        for (int i = 0; i < ROW; i++)
+        {
+            for (int j = 0; j < COL; j++)
+            {
+                arrMatrix_Origin[i, j] = arrMatrix[i, j];
             }
         }
     }
@@ -488,6 +552,20 @@ public class MainController : MonoBehaviour
         var texture = Resources.Load<Texture2D>(strInput);
         imgMain.texture = texture;
         loadToTexture();
+    }
+    private bool checkComplete()
+    {
+        for (int i = 0; i < ROW; i++)
+        {
+            for (int j = 0; j < COL; j++)
+            {
+                if (arrMatrix[i, j] != arrMatrix_Origin[i, j])
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
     /// <summary>
     /// Phương thức xử lý chi tiết khi load ảnh
@@ -678,7 +756,7 @@ public class MainController : MonoBehaviour
         {
             for (int j = 1; j <= COL - 2; j++)
             {
-                var gameObjectBkgr = getGameObjectBackground(i,j);
+                var gameObjectBkgr = getGameObjectBackground(i, j);
                 foreach (var item in lstGameObject)
                 {
                     var inf = item.GetComponent<Info>();
@@ -686,7 +764,7 @@ public class MainController : MonoBehaviour
                     {
                         continue;
                     }
-                    if (inf.Current == arrMatrix[i,j])
+                    if (inf.Current == arrMatrix[i, j])
                     {
                         item.GetComponent<RectTransform>().anchoredPosition = gameObjectBkgr.GetComponent<RectTransform>().anchoredPosition;
                         break;
@@ -694,13 +772,13 @@ public class MainController : MonoBehaviour
                 }
             }
         }
-        
+
     }
     /// <summary>
     /// Hàm xử lý chi tiết: get đối được Nền
     /// </summary>
     /// <returns></returns>
-    private GameObject getGameObjectBackground(int _row,int _col)
+    private GameObject getGameObjectBackground(int _row, int _col)
     {
         var i = (_row - 1) * (COL - 2) + (_col - 1);
         return lstGameObject_BackGround[i];
@@ -1721,7 +1799,7 @@ public class MainController : MonoBehaviour
     private void Swap_UpDownB_RL()
     {
         Swap_UpDown_RL(false);
-    }   
+    }
     #endregion
     #region Swap Hoán vị chéo
     private void SwapHoanVi()
@@ -1750,7 +1828,7 @@ public class MainController : MonoBehaviour
                     arrMatrix[i, j] = arrMatrix[i, j + 1];
                     arrMatrix[i, j + 1] = tmp;
                     j++;
-                    if(i == 1)
+                    if (i == 1)
                     {
                         count++;
                     }
@@ -1758,7 +1836,7 @@ public class MainController : MonoBehaviour
                     {
                         countTemp++;
                     }
-                    if(countTemp == count)
+                    if (countTemp == count)
                     {
                         break;
                     }
@@ -1892,7 +1970,7 @@ public class MainController : MonoBehaviour
                     tmp = arrMatrix[i, j];
                     arrMatrix[i, j] = arrMatrix[i + 1, j];
                 }
-                else if(i == ROW - 2)
+                else if (i == ROW - 2)
                 {
                     arrMatrix[i, j] = tmp;
                 }
@@ -1935,7 +2013,7 @@ public class MainController : MonoBehaviour
         for (int i = 1; i <= ROW - 2; i++)
         {
             var tmp = -1;
-            if(i%2 == 0)
+            if (i % 2 == 0)
             {
                 for (int j = 1; j <= COL - 2; j++)
                 {
@@ -2034,7 +2112,7 @@ public class MainController : MonoBehaviour
     private void Swap_Sin()
     {
         generateArray();
-        var arrTmp =  new int[ROW, COL];
+        var arrTmp = new int[ROW, COL];
         for (int i = 0; i < ROW; i++)
         {
             for (int j = 0; j < COL; j++)
@@ -2046,20 +2124,20 @@ public class MainController : MonoBehaviour
         {
             for (int j = 1; j <= COL - 2; j++)
             {
-                if((i + j) >= ROW)
+                if ((i + j) >= ROW)
                 {
-                    if(i == (ROW - 2) && j == (COL - 2))
+                    if (i == (ROW - 2) && j == (COL - 2))
                     {
-                        arrTmp[i, j] = arrMatrix[1 , j];
+                        arrTmp[i, j] = arrMatrix[1, j];
                     }
                     else
                     {
-                        arrTmp[i , j] = arrMatrix[1 + (i + j - 1)%( ROW - 1), j];
+                        arrTmp[i, j] = arrMatrix[1 + (i + j - 1) % (ROW - 1), j];
                     }
                 }
                 else
                 {
-                    arrTmp[i , j] = arrMatrix[i + j - 1, j];
+                    arrTmp[i, j] = arrMatrix[i + j - 1, j];
                 }
             }
         }
