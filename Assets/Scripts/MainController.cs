@@ -28,6 +28,10 @@ public class MainController : MonoBehaviour
     /// </summary>
     public Text txtComplete;
     /// <summary>
+    /// Đối tượng Canvas showDialog
+    /// </summary>
+    public Canvas cvShowDialog;
+    /// <summary>
     /// Button
     /// </summary>
     public Button btnPlay;
@@ -38,6 +42,8 @@ public class MainController : MonoBehaviour
     public Button btnHighScore;
     public Button btnReLoad;
     public GameObject btnCompass;
+    public Button btnOK;
+    public Button btnShare;
     /// <summary>
     /// Biến check game đang ở mode EASY hay mode NORMAL
     /// </summary>
@@ -128,7 +134,7 @@ public class MainController : MonoBehaviour
         handle();
         if (checkComplete())
         {
-            txtComplete.gameObject.SetActive(true);
+            cvShowDialog.gameObject.SetActive(true);
         }
         else
         {
@@ -313,6 +319,14 @@ public class MainController : MonoBehaviour
         reArrange();
         //showArray();
     }
+    public void ButtonOK()
+    {
+        NextImage();
+    }
+    public void ButtonShare()
+    {
+
+    }
     //fake
     private void showArray()
     {
@@ -349,7 +363,7 @@ public class MainController : MonoBehaviour
         btnReLoad.gameObject.SetActive(true);
 
         btnCompass.gameObject.SetActive(false);
-        txtComplete.gameObject.SetActive(false);
+        cvShowDialog.gameObject.SetActive(false);
 
         #region Tạm thời ẩn nút này đi
         btnLoadImage.gameObject.SetActive(false);
