@@ -298,10 +298,19 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Common.cs" />
+    <Compile Include="Assets\Scripts\ExtensionMethod.cs" />
+    <Compile Include="Assets\Scripts\Info.cs" />
     <Compile Include="Assets\Scripts\LongClickButton.cs" />
     <Compile Include="Assets\Scripts\MainController.cs" />
+    <Compile Include="Assets\Scripts\SWAP\Block3.cs" />
+    <Compile Include="Assets\Scripts\SWAP\HoanViCheo.cs" />
+    <Compile Include="Assets\Scripts\SWAP\Sin.cs" />
+    <Compile Include="Assets\Scripts\SWAP\Sole.cs" />
+    <Compile Include="Assets\Scripts\SWAP\UpDown.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Dadako\BitmapFonts\Pixel\_PixelCharLimits.txt" />
     <None Include="Assets\Plugins\SimpleFileBrowser\README.txt" />
     <None Include="C:\Users\phu.nv\AppData\Local\Unity\cache\packages\packages.unity.com\com.unity.package-manager-ui@1.8.8\Editor\Resources\Styles\Main_Dark.uss" />
     <None Include="C:\Users\phu.nv\AppData\Local\Unity\cache\packages\packages.unity.com\com.unity.package-manager-ui@1.8.8\Editor\Resources\Styles\Main_Light.uss" />

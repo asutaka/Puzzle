@@ -335,6 +335,7 @@
     <Compile Include="C:\Users\phu.nv\AppData\Local\Unity\cache\packages\packages.unity.com\com.unity.standardevents@1.0.13\Editor\Importer.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Dadako\BitmapFonts\Pixel\_PixelCharLimits.txt" />
     <None Include="Assets\Plugins\SimpleFileBrowser\README.txt" />
     <None Include="C:\Users\phu.nv\AppData\Local\Unity\cache\packages\packages.unity.com\com.unity.package-manager-ui@1.8.8\Editor\Resources\Styles\Main_Dark.uss" />
     <None Include="C:\Users\phu.nv\AppData\Local\Unity\cache\packages\packages.unity.com\com.unity.package-manager-ui@1.8.8\Editor\Resources\Styles\Main_Light.uss" />
