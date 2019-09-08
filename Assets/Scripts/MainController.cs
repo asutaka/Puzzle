@@ -45,6 +45,7 @@ public class MainController : MonoBehaviour
     public Button btnOK;
     public Button btnShare;
     public GameObject objControlHandle;
+    public GameObject objExitPanel;
     /// <summary>
     /// Biến check game đang ở mode EASY hay mode NORMAL
     /// </summary>
@@ -58,7 +59,7 @@ public class MainController : MonoBehaviour
     //Hằng số giá trị index của ảnh đầu tiên và ảnh cuối cùng
     private const int FIRST_IMAGE = 1, LAST_IMAGE = 12;
     //Biến kiểm tra keyCode nào được bấm
-    private bool keyLeft, keyRight, keyUp, keyDown;
+    private bool keyLeft, keyRight, keyUp, keyDown, keyEscape;
     //Biến lưu index của cell trống hiện tại(Cell không chứa miếng ghép)
     private int currentEmptyRow = 1, currentEmptyCol = 1;
     // Biến chứa đường dẫn được lựa chọn 
@@ -67,6 +68,8 @@ public class MainController : MonoBehaviour
    
     //Biến check trạng thái đang chơi hay ở màn hình chờ
     private bool isView = true;
+    //Biến check trạng thái Quit
+    private bool isQuit = false;
     /// <summary>
     /// Thời điểm ban đầu
     /// </summary>
@@ -89,6 +92,11 @@ public class MainController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isQuit)
+        {
+            objExitPanel.gameObject.SetActive(true);
+            return;
+        }
         if (isView)
             return;
         if (Common.checkComplete())
@@ -203,6 +211,7 @@ public class MainController : MonoBehaviour
     }
     public void ButtonOK()
     {
+        isView = true;
         setStatus(true);
         if(Common.curImage == LAST_IMAGE)
         {
@@ -235,6 +244,17 @@ public class MainController : MonoBehaviour
     {
         
     }
+    public void ButtonCanCelExit()
+    {
+        isQuit = false;
+        objExitPanel.gameObject.SetActive(false);
+    }
+    public void ButtonExit()
+    {
+        isQuit = false;
+        objExitPanel.gameObject.SetActive(false);
+        Application.Quit();
+    }
     #endregion
     #region Private function
     /// <summary>
@@ -246,6 +266,7 @@ public class MainController : MonoBehaviour
         keyRight = Input.GetKeyDown(KeyCode.RightArrow);
         keyUp = Input.GetKeyDown(KeyCode.UpArrow);
         keyDown = Input.GetKeyDown(KeyCode.DownArrow);
+        keyEscape = Input.GetKeyDown(KeyCode.Escape);
     }
     /// <summary>
     /// Thiết lập trạng thái Active/DeActive của các nút
@@ -264,6 +285,7 @@ public class MainController : MonoBehaviour
         objControlHandle.gameObject.SetActive(!_isView);
 
         cvShowDialog.gameObject.SetActive(false);
+        objExitPanel.gameObject.SetActive(false);
         #region Tạm thời ẩn nút này đi
         btnLoadImage.gameObject.SetActive(false);
         chkMode.gameObject.SetActive(false);
@@ -397,6 +419,7 @@ public class MainController : MonoBehaviour
         }
         //Load a Texture (Assets/Resources/Disney/1_Dumbo.png)
         var texture = Resources.Load<Texture2D>(strInput);
+        imgMain.texture = null;
         imgMain.texture = texture;
         loadToTexture();
     }
@@ -579,6 +602,10 @@ public class MainController : MonoBehaviour
             {
                 return;
             }
+        }
+        else if (keyEscape)
+        {
+            isQuit = true;
         }
     }
     private void Up()

@@ -1,6 +1,6 @@
 Android
 PlayerPath?
-C:/Users/phu.nv/Desktop/25082019_2.apk
+C:/Users/phu.nv/Desktop/31082019_3.apk
 SceneListBegin?
 Assets/Scenes/SceneMain.unity
 SceneListEnd?
@@ -152,5 +152,5 @@ bc68edb0af574bf79f9550ead8ebae5c UnityEngine.HoloLens.dll:UnityEngine.Audio.Audi
 c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.SpatialMappingCollider
 45f3431f0103c41611e8d4eec3d439df UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.SpatialMappingRenderer
 9de3a22eca9aefadba2d10d5987cefe3 UnityEngine.SpatialTracking.dll:UnityEngine.SpatialTracking.TrackedPoseDriver
-86879633e5c5e7ef11cd29d516aaf331 Assembly-CSharp.dll:.MainController
+e4ae1d90c132425788eab097b2918f90 Assembly-CSharp.dll:.MainController
 fca716328dc5ab5d3460f93ec2b38c58 Assembly-CSharp.dll:.LongClickButton
